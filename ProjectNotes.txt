@@ -1,0 +1,22 @@
+Project:
+1. Convert the images to YUV format.
+2. Sequence them (row by row or spiral).
+3. Task 1: Explore and evaluate (try to implement) the compression methods discussed in the paper.
+4. Task 2: Implement multi-view: Think about spatial and temporal for 3D view.
+5. Task 3: Subjective and objective evaluation methods.
+
+For the proposal:
+1. Show your understanding of lightfields. Be prepared for questions.
+2. Explain what the project is gonna be. Show differences between camare array and microlens arrays.
+
+Proposal presentation feedback:
+1. HEVC is lossy. This project hence focuses on evaluation of lossy compression schemes.
+2. Think about how to visualize/display light fields (for subjective evaluation).
+3. Multi-views. How many views can we have?
+4. How many subapertures are there in a given camera? (Cannot change as it is a physical property of the camera.)
+
+1. Convert from RGB to YCbCr
+2. Chroma-downsampling (for 444 -> 420 only)
+3. Make a YUV (video) (Note: For MVC, may need to separate columns and rows)
+4. Use HEVC (the 5 methods in the paper) and with MVC (multi-view coding) to compress the YUV (try different configurations)
+5. Evaluation
