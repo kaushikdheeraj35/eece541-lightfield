@@ -1,4 +1,4 @@
-function [handle] = makeImageSequence(images, format)
+function makeImageSequence(outputFile, images, format, pattern)
 
 % Chroma downsampling format
 switch format
@@ -20,17 +20,27 @@ switch format
     otherwise
         error('Unknown chroma downsampling format.')
 end
-    
-handle = 1;
-imageCount = 1;
 
-outputVideo = VideoWriter(fullfile(workingDir, 'output.yuv'));
-for i = 1:imageCount
-    ycbcrImage = rgb2ycbcr(rgbImage);
-    %imshow(ycbcrImage);
-    writeVideo(outputVideo, ycbcrImage);
+% Colour format conversion
+for i = 1:length(images(:))
+    images{i} = rgb2ycbcr(images{i});
 end
 
-close(outputVideo);
+sequence = VideoWriter(outputFile);
+open(sequence);
+% Sequencing pattern
+switch pattern
+    case 'zigzag'
+        for i = 1:size(images, 1)
+            for j = 1:size(images, 2)
+                writeVideo(sequence, images{i, j});
+            end
+        end
+    case 'spiral'
+        
+    otherwise
+        error('Invalid pattern.');
+end
+close(sequence);
 
 end
