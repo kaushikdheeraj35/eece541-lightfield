@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# MATLAB temporary files
+*.asv
+
 # Resources
 /resources
 /bonus

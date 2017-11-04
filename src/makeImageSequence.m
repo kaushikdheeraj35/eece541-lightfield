@@ -3,20 +3,20 @@ function makeImageSequence(outputFile, images, format, pattern)
 % Chroma downsampling format
 switch format
     case '400'
-        fwidth = 0.0;
-        fheight = 0.0;
+        horizontalSamples = 0;
+        verticalSamples = 0;
     case '411'
-        fwidth = 0.25;
-        fheight = 1.0;
+        horizontalSamples = 4;
+        verticalSamples = 1;
     case '420'
-        fwidth = 0.5;
-        fheight = 0.5;
+        horizontalSamples = 2;
+        verticalSamples = 2;
     case '422'
-        fwidth = 0.5;
-        fheight = 1.0;
+        horizontalSamples = 2;
+        verticalSamples = 1;
     case '444'
-        fwidth = 1.0;
-        fheight = 1.0;
+        horizontalSamples = 1;
+        verticalSamples = 1;
     otherwise
         error('Unknown chroma downsampling format.')
 end
@@ -27,13 +27,12 @@ for i = 1:length(images(:))
 end
 
 fileHandle = fopen(outputFile, 'w');
-% TODO: Add a waitbar?
 % Sequencing pattern
 switch pattern
-    case 'zigzag'
+    case 'line'
         for i = 1:size(images, 1)
             for j = 1:size(images, 2)
-                saveYuvFrame(fileHandle, images{i, j}, fwidth, fheight);
+                saveYuvFrame(fileHandle, images{i, j}, horizontalSamples, verticalSamples);
             end
         end
     case 'spiral'
@@ -42,9 +41,31 @@ switch pattern
         elseif rem(size(images, 1),  2) == 0
             error('Spiral pattern currently only works for odd number side lengths.')
         end
-        dim = size(images, 1);
-        for i = 1:dim
-            % TODO: WIP
+        sideLength = size(images, 1);
+        ringCount = (sideLength + 1) / 2;
+        curIndices = ones(2, 1) .* ringCount;
+        % Ring 1 (centre)
+        saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, horizontalSamples, verticalSamples);
+        curDirection = [1; 0]; % Down
+        % Rings 2 and above
+        for ring = 2:ringCount
+            % Down
+            curIndices = curIndices + curDirection;
+            saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, horizontalSamples, verticalSamples);
+            % Right
+            curDirection = [0 -1; 1 0] * curDirection;
+            for i = 1:(ring - 1)* 2 - 1
+                curIndices = curIndices + curDirection;
+                saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, horizontalSamples, verticalSamples);
+            end
+            % Up, left, and down
+            for sideIdx = 1:3
+                curDirection = [0 -1; 1 0] * curDirection;
+                for i = 1:(ring - 1) * 2
+                    curIndices = curIndices + curDirection;
+                    saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, horizontalSamples, verticalSamples);
+                end
+            end
         end
     otherwise
         error('Invalid pattern.');
@@ -53,7 +74,7 @@ fclose(fileHandle);
 
 end
 
-function saveYuvFrame(fileHandle, frame, fwidth, fheight)
+function saveYuvFrame(fileHandle, frame, horizontalSamples, verticalSamples)
 
 if length(size(frame)) ~= 3
     error('Expected 3 dimensions.');
