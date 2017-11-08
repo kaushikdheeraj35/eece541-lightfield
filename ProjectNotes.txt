@@ -20,3 +20,8 @@ Proposal presentation feedback:
 3. Make a YUV (video) (Note: For MVC, may need to separate columns and rows)
 4. Use HEVC (the 5 methods in the paper) and with MVC (multi-view coding) to compress the YUV (try different configurations)
 5. Evaluation
+
+Tips and notes:
+1. Should probably use a GOP of 4 to keep things relatively simple.
+2. Think about how to set up reference frames for spiral (just the one at the centre?) and line (say every 17 frams?).
+3. When experimenting with intermediate results, can try downsampling the images when making videos to reduce the data to process.

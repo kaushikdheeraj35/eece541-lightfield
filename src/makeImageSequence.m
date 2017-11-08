@@ -84,7 +84,7 @@ y = double(frame(:, :, 1));
 u = double(frame(:, :, 2));
 v = double(frame(:, :, 3));
 % TODO: Implement the others. This is for 4:2:0 only
-% Reference: https://www.mathworks.com/matlabcentral/fileexchange/11264-matlab-movie-to-yuv-file
+% Can use a built-in function for this? https://www.mathworks.com/help/vision/ref/vision.chromaresampler-system-object.html
 u2 = (u(1:2:end, 1:2:end) + u(2:2:end, 1:2:end) + u(1:2:end, 2:2:end) + u(2:2:end, 2:2:end)) ./ 4;
 v2 = (v(1:2:end, 1:2:end) + v(2:2:end, 1:2:end) + v(1:2:end, 2:2:end) + v(2:2:end, 2:2:end)) ./ 4;
 
