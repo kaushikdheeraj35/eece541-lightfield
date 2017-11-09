@@ -18,6 +18,7 @@ Proposal presentation feedback:
 1. Convert from RGB to YCbCr
 2. Chroma-downsampling (for 444 -> 420 only)
 3. Make a YUV (video) (Note: For MVC, may need to separate columns and rows)
+    3.1. Other than the raster scan and spiral patterns, may get creative and try other patterns such as back-and-forth raster (S-shaped) or spiral-in.
 4. Use HEVC (the 5 methods in the paper) and with MVC (multi-view coding) to compress the YUV (try different configurations)
 5. Evaluation
 
