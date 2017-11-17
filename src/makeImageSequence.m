@@ -1,5 +1,9 @@
 function makeImageSequence(outputFile, images, pattern, chromaResampler)
 
+if length(size(images)) ~= 2
+    error('Only 2D image arrays are supported.');
+end
+
 % Colour format conversion
 for i = 1:length(images(:))
     images{i} = rgb2ycbcr(images{i});
