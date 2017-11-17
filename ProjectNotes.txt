@@ -24,5 +24,15 @@ Proposal presentation feedback:
 
 Tips and notes:
 1. Should probably use a GOP of 4 to keep things relatively simple.
-2. Think about how to set up reference frames for spiral (just the one at the centre?) and line (say every 17 frams?).
-3. When experimenting with intermediate results, can try downsampling the images when making videos to reduce the data to process.
+2. Think about how to set up reference frames for spiral (just the one at the centre?) and line (say every 17 frames?).
+3. When experimenting with intermediate results, can try downsizing the images when making videos to reduce the data to process.
+
+// TODO: Turn this file into a README.md?
+---
+Usage:
+1. Run the MATLAB script: `project.m` to generate the videos
+2. Navigate to the `assets` directory. Run:
+```
+    TAppEncoder.exe -c config_good.cfg -i sequence_line.yuv -b str_line.bin -o rec_line.yuv
+    TAppEncoder.exe -c config_good.cfg -i sequence_spiral.yuv -b str_spiral.bin -o rec_spiral.yuv
+```
