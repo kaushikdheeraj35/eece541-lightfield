@@ -20,12 +20,18 @@ Proposal presentation feedback:
 3. Make a YUV (video) (Note: For MVC, may need to separate columns and rows)
     3.1. Other than the raster scan and spiral patterns, may get creative and try other patterns such as back-and-forth raster (S-shaped) or spiral-in.
 4. Use HEVC (the 5 methods in the paper) and with MVC (multi-view coding) to compress the YUV (try different configurations)
+    4.1 For the compression schemes in the paper, skip the metadata and 4DLF parts as we're using camera arrays not lenselet images.
+    4.2 Get the MVC paper from Joseph.
+    4.3 Try to reproduce the results in the paper.
+    4.4 Try to do better than those?
 5. Evaluation
 
 Tips and notes:
-1. Should probably use a GOP of 4 to keep things relatively simple.
-2. Think about how to set up reference frames for spiral (just the one at the centre?) and line (say every 17 frames?).
-3. When experimenting with intermediate results, can try downsizing the images when making videos to reduce the data to process.
+1. Should probably use a GOP of 4 to keep things relatively simple at the beginning.
+    1.1 Optimize the GOP structure For 17x17 camera array images (should probably use a GOP of 17?)
+2. Can try playing with the QP factor in the config (get the QP presets from Joseph?)
+3. Think about how to set up reference frames for spiral (just the one at the centre?) and line (say every 17 frames?).
+4. When experimenting with intermediate results, can try downsizing the images when making videos to reduce the data to process.
 
 // TODO: Turn this file into a README.md?
 ---
