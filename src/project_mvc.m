@@ -1,4 +1,4 @@
-%% EECE 541 Light Field Project
+%% EECE 541 Light Field Project (MVC)
 
 %% Load the images
 workingDir = '../resources/4_Compression/Content/Camera array/Lego Knights/rectified';
@@ -16,12 +16,7 @@ end
 chromaResampler = vision.ChromaResampler('Resampling', '4:4:4 to 4:2:0 (MPEG1)');
 
 %% Generate an image sequence
-makeImageSequence('../assets/sequence_line.yuv', images, 'line', chromaResampler);
-makeImageSequence('../assets/sequence_spiral.yuv', images, 'spiral', chromaResampler);
+makeImageSequence('../assets/mvc/mvc_sequence1.yuv', images(1, :), 'line', chromaResampler);
+makeImageSequence('../assets/mvc/mvc_sequence2.yuv', images(2, :), 'line', chromaResampler);
 
-%% Compression
-% P01
-% P02
-% P03
-% P04
-% P05
+% NOTE: Use config files from 3D-HEVC?
