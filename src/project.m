@@ -20,8 +20,4 @@ makeImageSequence('../assets/sequence_line.yuv', images, 'line', chromaResampler
 makeImageSequence('../assets/sequence_spiral.yuv', images, 'spiral', chromaResampler);
 
 %% Compression
-% P01
-% P02
-% P03
-% P04
-% P05
+% Try different QP, image ordering, encoder configurations, etc.
