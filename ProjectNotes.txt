@@ -42,3 +42,22 @@ Usage:
     TAppEncoder.exe -c config_good.cfg -i sequence_line.yuv -b str_line.bin -o rec_line.yuv
     TAppEncoder.exe -c config_good.cfg -i sequence_spiral.yuv -b str_spiral.bin -o rec_spiral.yuv
 ```
+
+Nov 28, 2017
+Single-view HEVC:
+1. Raster
+2. Spiral
+MVC:
+1. Row-wise sequencing
+2. Another one
+
+Common:
+1. Resolution 1024 -> 256; chroma: 444 -> 420
+2. Resolution 1024; chroma: 444 -> 420
+3. Resolution 1024: chroma: 444
+
+Each five QPs and three GOP sizes.
+=> 2 * 3 * 5 * 3 = 90 data points
+Single-view and MVC combined gives 180 data points.
+Remember to do subjective tests (invite people that are not involved) and document the process.
+Ask Joseph to evaluate them first!

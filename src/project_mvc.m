@@ -16,7 +16,9 @@ end
 chromaResampler = vision.ChromaResampler('Resampling', '4:4:4 to 4:2:0 (MPEG1)');
 
 %% Generate an image sequence
-makeImageSequence('../assets/mvc/mvc_sequence1.yuv', images(1, :), 'line', chromaResampler);
-makeImageSequence('../assets/mvc/mvc_sequence2.yuv', images(2, :), 'line', chromaResampler);
+for i = 1:size(images, 1)
+    file = sprintf('../assets/mvc/mvc_sequence%d.yuv', i);
+    makeImageSequence(file, images(i, :), 'line', chromaResampler);
+end
 
-% NOTE: Use config files from 3D-HEVC?
+
