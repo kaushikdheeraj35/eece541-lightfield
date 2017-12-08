@@ -9,13 +9,20 @@ for i = 1:length(images(:))
     images{i} = rgb2ycbcr(images{i});
 end
 
+if (nargin >= 4)
+    processFrame = @(file, frame) ...
+        saveYuvFrame(file, frame, chromaResampler);
+else
+    processFrame = @(file, frame) saveYuvFrame(file, frame);
+end
+
 fileHandle = fopen(outputFile, 'w');
 % Sequencing pattern
 switch pattern
     case 'line'
         for i = 1:size(images, 1)
             for j = 1:size(images, 2)
-                saveYuvFrame(fileHandle, images{i, j}, chromaResampler);
+                processFrame(fileHandle, images{i, j});
             end
         end
     case 'spiral'
@@ -28,25 +35,25 @@ switch pattern
         ringCount = (sideLength + 1) / 2;
         curIndices = ones(2, 1) .* ringCount;
         % Ring 1 (centre)
-        saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, chromaResampler);
+        processFrame(fileHandle, images{curIndices(1), curIndices(2)});
         curDirection = [1; 0]; % Down
         % Rings 2 and above
         for ring = 2:ringCount
             % Down
             curIndices = curIndices + curDirection;
-            saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, chromaResampler);
+            processFrame(fileHandle, images{curIndices(1), curIndices(2)});
             % Right
             curDirection = [0 -1; 1 0] * curDirection;
             for i = 1:(ring - 1)* 2 - 1
                 curIndices = curIndices + curDirection;
-                saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, chromaResampler);
+                processFrame(fileHandle, images{curIndices(1), curIndices(2)});
             end
             % Up, left, and down
             for sideIdx = 1:3
                 curDirection = [0 -1; 1 0] * curDirection;
                 for i = 1:(ring - 1) * 2
                     curIndices = curIndices + curDirection;
-                    saveYuvFrame(fileHandle, images{curIndices(1), curIndices(2)}, chromaResampler);
+                    processFrame(fileHandle, images{curIndices(1), curIndices(2)});
                 end
             end
         end
@@ -66,7 +73,11 @@ end
 y = double(frame(:, :, 1));
 u = double(frame(:, :, 2));
 v = double(frame(:, :, 3));
-[u2, v2] = step(chromaResampler, u, v);
+if (nargin >= 3)
+    [u2, v2] = step(chromaResampler, u, v);
+else
+    u2 = u; v2 = v;
+end
 
 fwrite(fileHandle, uint8(y'), 'uchar');
 fwrite(fileHandle, uint8(u2'), 'uchar');
