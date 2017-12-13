@@ -16,7 +16,7 @@ end
 chromaResampler = vision.ChromaResampler('Resampling', '4:4:4 to 4:2:0 (MPEG1)');
 
 %% Generate an image sequence
-makeImageSequence('../assets/sequence_line_420.yuv', images, 'line', chromaResampler);
+makeImageSequence('../assets/sequence_raster_420.yuv', images, 'raster', chromaResampler);
 makeImageSequence('../assets/single_view_444/sequence_spiral_444.yuv', images, 'spiral');
 
 %% Compression

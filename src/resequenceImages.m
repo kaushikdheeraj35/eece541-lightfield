@@ -1,4 +1,4 @@
-function resequenceImages(outputFile, inputFiles, inputPattern, width, height)
+function resequenceImages(outputFile, inputFiles, inputPattern, chromaFormat, width, height)
 %READIMAGESEQUENCE Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -9,47 +9,79 @@ for i = 1:size(inputFiles, 1)
     fclose(inputFileHandle);
 end
 
-frameLength = 1.5 * width * height; % TODO: Works for 420 only for now
+switch chromaFormat
+    case '420'
+        frameLength = 1.5 * width * height;
+    case '444'
+        frameLength = 3.0 * width * height;
+    otherwise
+        error('Invalid chroma format.');
+end
 sideLength = 17;
 
 frames = cell(sideLength, sideLength);
 switch inputPattern
-    case 'line'
+    case 'raster'
         for i = 1:sideLength
             for j = 1:sideLength
                 k = (i - 1) * sideLength + j;
                 frames{i, j} = byteStream(((k - 1) * frameLength + 1):(k * frameLength));
             end
         end
+    case 'spiral'
+        if size(frames, 1) ~= size(frames, 2)
+            error('Spiral pattern currently only works for a square layout.');
+        elseif rem(size(frames, 1),  2) == 0
+            error('Spiral pattern currently only works for odd number side lengths.')
+        end
+        sideLength = size(frames, 1);
+        ringCount = (sideLength + 1) / 2;
+        curIndices = ones(2, 1) .* ringCount;
+        % Ring 1 (centre)
+        k = 1;
+        frames{curIndices(1), curIndices(2)} = ...
+            byteStream(((k - 1) * frameLength + 1):(k * frameLength));
+        curDirection = [1; 0]; % Down
+        % Rings 2 and above
+        for ring = 2:ringCount
+            % Down
+            curIndices = curIndices + curDirection;
+            k = k + 1;
+            frames{curIndices(1), curIndices(2)} = ...
+                byteStream(((k - 1) * frameLength + 1):(k * frameLength));
+            % Right
+            curDirection = [0 -1; 1 0] * curDirection;
+            for i = 1:(ring - 1)* 2 - 1
+                curIndices = curIndices + curDirection;
+                k = k + 1;
+                frames{curIndices(1), curIndices(2)} = ...
+                    byteStream(((k - 1) * frameLength + 1):(k * frameLength));
+            end
+            % Up, left, and down
+            for sideIdx = 1:3
+                curDirection = [0 -1; 1 0] * curDirection;
+                for i = 1:(ring - 1) * 2
+                    curIndices = curIndices + curDirection;
+                    k = k + 1;
+                    frames{curIndices(1), curIndices(2)} = ...
+                        byteStream(((k - 1) * frameLength + 1):(k * frameLength));
+                end
+            end
+        end
     otherwise
         error('Invalid pattern.');
 end
 
+% Resequence to line
 outputFileHandle = fopen(outputFile, 'w');
-% TODO: Resequence from line to spiral only
-ringCount = (sideLength + 1) / 2;
-curIndices = ones(2, 1) .* ringCount;
-% Ring 1 (centre)
-fwrite(outputFileHandle, frames{curIndices(1), curIndices(2)}, 'uchar');
-curDirection = [1; 0]; % Down
-% Rings 2 and above
-for ring = 2:ringCount
-    % Down
-    curIndices = curIndices + curDirection;
-    fwrite(outputFileHandle, frames{curIndices(1), curIndices(2)}, 'uchar');
-    % Right
-    curDirection = [0 -1; 1 0] * curDirection;
-    for i = 1:(ring - 1)* 2 - 1
-        curIndices = curIndices + curDirection;
-        fwrite(outputFileHandle, frames{curIndices(1), curIndices(2)}, 'uchar');
+for rowIdx = 7:11 % Show the middle 5 rows only
+    if rem(rowIdx, 2) == 1
+        colRange = 1:size(frames, 2);
+    else
+        colRange = size(frames, 2):-1:1;
     end
-    % Up, left, and down
-    for sideIdx = 1:3
-        curDirection = [0 -1; 1 0] * curDirection;
-        for i = 1:(ring - 1) * 2
-            curIndices = curIndices + curDirection;
-            fwrite(outputFileHandle, frames{curIndices(1), curIndices(2)}, 'uchar');
-        end
+    for colIdx = colRange
+        fwrite(outputFileHandle, frames{rowIdx, colIdx}, 'uchar');
     end
 end
 fclose(outputFileHandle);

@@ -19,7 +19,7 @@ end
 fileHandle = fopen(outputFile, 'w');
 % Sequencing pattern
 switch pattern
-    case 'line'
+    case 'raster'
         for i = 1:size(images, 1)
             for j = 1:size(images, 2)
                 processFrame(fileHandle, images{i, j});

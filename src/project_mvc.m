@@ -18,5 +18,5 @@ chromaResampler = vision.ChromaResampler('Resampling', '4:4:4 to 4:2:0 (MPEG1)')
 %% Generate an image sequence
 for i = 1:size(images, 1)
     fileName = sprintf('../assets/mvc/mvc_420_%d.yuv', i - 1);
-    makeImageSequence(fileName, images(i, :), 'line', chromaResampler);
+    makeImageSequence(fileName, images(i, :), 'raster', chromaResampler);
 end
