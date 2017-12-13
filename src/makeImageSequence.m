@@ -11,9 +11,9 @@ end
 
 if (nargin >= 4)
     processFrame = @(file, frame) ...
-        saveYuvFrame(file, frame, chromaResampler);
+        writeFrame(file, frame, chromaResampler);
 else
-    processFrame = @(file, frame) saveYuvFrame(file, frame);
+    processFrame = @(file, frame) writeFrame(file, frame);
 end
 
 fileHandle = fopen(outputFile, 'w');
@@ -61,26 +61,5 @@ switch pattern
         error('Invalid pattern.');
 end
 fclose(fileHandle);
-
-end
-
-function saveYuvFrame(fileHandle, frame, chromaResampler)
-
-if length(size(frame)) ~= 3
-    error('Expected 3 dimensions.');
-end
-
-y = double(frame(:, :, 1));
-u = double(frame(:, :, 2));
-v = double(frame(:, :, 3));
-if (nargin >= 3)
-    [u2, v2] = step(chromaResampler, u, v);
-else
-    u2 = u; v2 = v;
-end
-
-fwrite(fileHandle, uint8(y'), 'uchar');
-fwrite(fileHandle, uint8(u2'), 'uchar');
-fwrite(fileHandle, uint8(v2'), 'uchar');
 
 end
