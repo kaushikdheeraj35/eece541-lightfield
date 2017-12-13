@@ -1,20 +1,28 @@
-function resequenceImages(outputFile, inputFile, width, height)
+function resequenceImages(outputFile, inputFiles, inputPattern, width, height)
 %READIMAGESEQUENCE Summary of this function goes here
 %   Detailed explanation goes here
 
-inputFileHandle = fopen(inputFile, 'r');
-byteStream = fread(inputFileHandle, '*uchar');
-fclose(inputFileHandle);
+byteStream = [];
+for i = 1:size(inputFiles, 1)
+    inputFileHandle = fopen(strtrim(inputFiles(i, :)), 'r');
+    byteStream = [byteStream; fread(inputFileHandle, '*uchar')];
+    fclose(inputFileHandle);
+end
 
 frameLength = 1.5 * width * height; % TODO: Works for 420 only for now
 sideLength = 17;
 
 frames = cell(sideLength, sideLength);
-for i = 1:sideLength
-    for j = 1:sideLength
-        k = (i - 1) * sideLength + j;
-        frames{i, j} = byteStream(((k - 1) * frameLength + 1):(k * frameLength));
-    end
+switch inputPattern
+    case 'line'
+        for i = 1:sideLength
+            for j = 1:sideLength
+                k = (i - 1) * sideLength + j;
+                frames{i, j} = byteStream(((k - 1) * frameLength + 1):(k * frameLength));
+            end
+        end
+    otherwise
+        error('Invalid pattern.');
 end
 
 outputFileHandle = fopen(outputFile, 'w');
