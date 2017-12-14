@@ -16,8 +16,9 @@ end
 chromaResampler = vision.ChromaResampler('Resampling', '4:4:4 to 4:2:0 (MPEG1)');
 
 %% Generate an image sequence
-makeImageSequence('../assets/sequence_raster_420.yuv', images, 'raster', chromaResampler);
-makeImageSequence('../assets/single_view_444/sequence_spiral_444.yuv', images, 'spiral');
-
+makeImageSequence('../assets/subjective_tests/original_444.yuv', images, 'raster');
+makeImageSequence('../assets/subjective_tests/original_420.yuv', images, 'raster', chromaResampler);
+resequenceImages('../assets/subjective_tests/original_444.yuv', '../assets/subjective_tests/original_444.yuv', 'raster', '444', 1024, 1024);
+resequenceImages('../assets/subjective_tests/original_420.yuv', '../assets/subjective_tests/original_420.yuv', 'raster', '420', 1024, 1024);
 %% Compression
 % Try different QP, image ordering, encoder configurations, etc.

@@ -37,3 +37,9 @@
 # Resources
 /resources
 /bonus
+*.yuv
+*.avi
+*.mp4
+*.wmv
+*.bin
+*.bit
